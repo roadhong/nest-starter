@@ -14,9 +14,9 @@ import Typography from '@mui/material/Typography';
 
 import { usePathname, useRouter } from '@root/views/pages/management/material-kit/routes/hooks';
 
-import { GoogleLoginButton } from '@root/views/pages/management/material-kit/components/google-login/google-login';
-import managementStore, { ROLE } from '@root/views/pages/management/store/ManagementStore';
 import ServerApi from '@root/common/util/server.api';
+import userStore, { ROLE } from '@root/common/store/UserStore';
+import { GoogleLoginButton } from '@root/components/GoogleLoginButton';
 
 // ----------------------------------------------------------------------
 
@@ -54,13 +54,13 @@ export const AccountPopover = observer(({ data = [], sx, ...other }: AccountPopo
     setOpenPopover(null);
 
     await ServerApi.Account.accountControllerLogout();
-    managementStore.clearUser();
+    userStore.clearUser();
     console.log('Logged out');
   };
 
   return (
     <>
-      {!managementStore.user ? (
+      {!userStore.user ? (
         <Box sx={{ p: 1 }}>
           <GoogleLoginButton useOneTap />
         </Box>
@@ -77,7 +77,7 @@ export const AccountPopover = observer(({ data = [], sx, ...other }: AccountPopo
             }}
             {...other}
           >
-            {managementStore.user.name.charAt(0).toUpperCase()}
+            {userStore.user.name.charAt(0).toUpperCase()}
           </IconButton>
 
           <Popover
@@ -94,13 +94,13 @@ export const AccountPopover = observer(({ data = [], sx, ...other }: AccountPopo
           >
             <Box sx={{ p: 2, pb: 1.5 }}>
               <Typography variant="subtitle2" noWrap>
-                {managementStore.user.name}
+                {userStore.user.name}
               </Typography>
               <Typography variant="body2" sx={{ color: 'text.secondary' }} noWrap>
-                {managementStore.user.email}
+                {userStore.user.email}
               </Typography>
               <Typography variant="body2" sx={{ color: 'text.secondary' }} noWrap>
-                {ROLE[managementStore.user.role]}
+                {ROLE[userStore.user.role]}
               </Typography>
             </Box>
 

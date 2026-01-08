@@ -6,11 +6,11 @@ import { Outlet } from 'react-router-dom';
 
 import Box from '@mui/material/Box';
 import LinearProgress, { linearProgressClasses } from '@mui/material/LinearProgress';
-import { observer } from 'mobx-react-lite';
 
 import { AuthLayout } from '@root/views/pages/management/material-kit/layouts/auth';
 import { DashboardLayout } from '@root/views/pages/management/material-kit/layouts/dashboard';
-import managementStore, { ROLE } from '@root/views/pages/management/store/ManagementStore';
+import { ROLE } from '@root/common/store/UserStore';
+import AuthGuard from '@root/components/AuthGuard';
 
 // ----------------------------------------------------------------------
 
@@ -30,16 +30,9 @@ export const ProductsPage = lazy(async () => import('@root/views/pages/managemen
 
 export const PageLoginRequest = lazy(async () => import('@root/views/pages/management/material-kit/pages/page-login-request'));
 
-export const Page403 = lazy(async () => import('@root/views/pages/management/material-kit/pages/page-forbidden'));
+export const Page403 = lazy(async () => import('@root/components/Forbidden'));
 
 export const Page404 = lazy(async () => import('@root/views/pages/management/material-kit/pages/page-not-found'));
-
-const AuthGuard = observer(({ children, requiredRole }: { children: React.ReactNode; requiredRole?: ROLE }) => {
-  if (!managementStore.user) return <PageLoginRequest />;
-  if (requiredRole && (!managementStore.user?.role || managementStore.user.role < requiredRole)) return <Page403 requiredRole={requiredRole} />;
-
-  return <div>{children}</div>;
-});
 
 const renderFallback = () => (
   <Box
@@ -79,7 +72,7 @@ export const routesSection: RouteObject[] = [
       {
         path: 'batch',
         element: (
-          <AuthGuard requiredRole={ROLE.ADMIN}>
+          <AuthGuard requiredRole={ROLE.USER} returnPage={<PageLoginRequest />}>
             <BatchPage />
           </AuthGuard>
         ),
@@ -87,7 +80,7 @@ export const routesSection: RouteObject[] = [
       {
         path: 'user',
         element: (
-          <AuthGuard requiredRole={ROLE.ADMIN}>
+          <AuthGuard requiredRole={ROLE.USER} returnPage={<PageLoginRequest />}>
             <UserPage />
           </AuthGuard>
         ),
@@ -95,7 +88,7 @@ export const routesSection: RouteObject[] = [
       {
         path: 'db',
         element: (
-          <AuthGuard requiredRole={ROLE.ADMIN}>
+          <AuthGuard requiredRole={ROLE.USER} returnPage={<PageLoginRequest />}>
             <DBPage />
           </AuthGuard>
         ),

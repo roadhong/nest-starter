@@ -19,7 +19,7 @@ export interface PlatformInfo {
   };
 }
 
-class ManagementStore {
+class UserStore {
   user: User | undefined;
   platformInfo: PlatformInfo | undefined;
 
@@ -50,5 +50,5 @@ class ManagementStore {
   }
 }
 
-const managementStore = new ManagementStore();
-export default managementStore;
+const userStore = new UserStore();
+export default userStore;

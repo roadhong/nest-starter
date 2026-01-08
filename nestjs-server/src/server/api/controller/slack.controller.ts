@@ -52,7 +52,8 @@ export class SlackController {
       ],
     ];
 
-    await this.slackService.updateMessage(payload.message.ts, {
+    await this.slackService.updateMessage({
+      ts: payload.message.ts,
       channel: payload.channel.id,
       blocks,
     });

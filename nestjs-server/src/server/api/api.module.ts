@@ -1,23 +1,26 @@
 import { Module, OnModuleInit } from '@nestjs/common';
-import { ServeStaticModule } from '@nestjs/serve-static';
-import ServerConfig from '@root/core/config/server.config';
 import { CoreModule } from '@root/core/core.module';
 import ServerLogger from '@root/core/server-logger/server.logger';
-import fs from 'fs';
 import path from 'path';
 import { ApiServiceModule } from './service/api.service.module';
-
-const staticClients = ServerConfig.client
-  .map((client) => ({
-    ...client,
-    rootPath: path.join(ServerConfig.paths.root, '..', ...client.rootPath.split('/')),
-  }))
-  .filter((client) => fs.existsSync(client.rootPath));
-
-const imports = [...(staticClients.length > 0 ? [ServeStaticModule.forRoot(...staticClients)] : []), ApiServiceModule];
+import { CommonResponse } from '@root/core/common/response';
+import { SwaggerDocumentModule } from 'nestjs-swagger-document';
 
 @Module({
-  imports: [...imports, CoreModule.registerDynamic(ApiModule, path.join(__dirname, 'controller'), '.controller', 'controllers')],
+  imports: [
+    ApiServiceModule,
+    SwaggerDocumentModule.forRoot({
+      pluginOptions: {
+        dtoFileNameSuffix: ['.schema.ts', '.dto.ts', 'define.ts', 'response.ts'],
+      },
+      commonResponseInfo: {
+        name: CommonResponse.name,
+        properties: 'data',
+      },
+      debug: true,
+    }),
+    CoreModule.registerDynamic(ApiModule, path.join(__dirname, 'controller'), '.controller', 'controllers'),
+  ],
   providers: [],
   exports: [],
   controllers: [],

@@ -111,7 +111,7 @@ export function AnalyticsWidgetSummary({ sx, icon, title, total, chart, percent,
       </Box>
 
       <SvgColor
-        src="/client/management/assets/background/shape-square.svg"
+        src="/management/assets/background/shape-square.svg"
         sx={{
           top: 0,
           left: -20,

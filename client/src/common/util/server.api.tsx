@@ -13,6 +13,12 @@ export default class ServerApi {
   static Google: GoogleApi;
   static User: UserApi;
 
+  static logout: () => Promise<void>;
+
+  static setLogout(logout: () => Promise<void>) {
+    ServerApi.logout = logout;
+  }
+
   static init() {
     const configuration = new Configuration();
     configuration.baseOptions = {

@@ -5,9 +5,11 @@ import { ResHealthCheck, ResPlatformInfo } from '@root/app.response.dto';
 import ServerConfig from '@root/core/config/server.config';
 import { NoAuthGuard, SkipResponseInterceptor } from '@root/core/decorator/core.decorator';
 import { GoogleSheetService } from '@root/core/google/google.sheet.service';
+import { SwaggerAppCommonSkip } from 'nestjs-swagger-document';
 
 @Controller('')
 @SkipResponseInterceptor()
+@SwaggerAppCommonSkip()
 @NoAuthGuard()
 export class AppController {
   constructor(private readonly googleSheetService: GoogleSheetService) {}

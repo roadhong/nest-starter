@@ -59,6 +59,8 @@ export class GoogleController {
   async getSheetData(@Session() session: SessionData, @Query() param: ReqGetSheetData): Promise<ResGetSheetData> {
     const result = await this.googleSheetService.getSheetDataByUrl(param.url, param.sheet_name, param.range);
 
-    return { result: result };
+    const res: ResGetSheetData = { result: result };
+
+    return res;
   }
 }

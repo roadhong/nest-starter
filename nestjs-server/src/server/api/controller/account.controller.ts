@@ -7,7 +7,7 @@ import { PLATFORM } from '@root/core/define/core.define';
 import CoreError from '@root/core/error/core.error';
 import ApiError from '@root/server/api/error/api.error';
 import { ReqCheckNickname, ReqGuestLogin } from '../dto/api.request.dto';
-import { ResDuplicatedCheck, ResGetAccount, ResLogin } from '../dto/api.response.dto';
+import { ResDuplicatedCheck, ResGetAccount, ResLogin, ResMessage } from '../dto/api.response.dto';
 import { AccountService } from '../service/account/account.service';
 
 /**
@@ -35,13 +35,13 @@ export class AccountController {
       path: '/',
     });
 
-    const resData: ResLogin = {
+    const res: ResLogin = {
       nickname: account.nickname,
       role: account.role,
       jwt,
     };
 
-    return resData;
+    return res;
   }
 
   /**
@@ -54,7 +54,11 @@ export class AccountController {
       throw ApiError.USER_NOT_FOUND;
     }
 
-    return { nickname: account.nickname };
+    const res: ResGetAccount = {
+      nickname: account.nickname,
+    };
+
+    return res;
   }
 
   /**
@@ -68,29 +72,41 @@ export class AccountController {
     }
     const account = await this.accountService.getAccountByNicknameAsync(req.nickname);
 
-    return { result: account ? true : false };
+    const res: ResDuplicatedCheck = {
+      result: account ? true : false,
+    };
+
+    return res;
   }
 
   /**
    * 로그아웃
    */
   @Post('/logout')
-  async logout(@Session() session: SessionData): Promise<any> {
+  async logout(@Session() session: SessionData): Promise<ResMessage> {
     await this.accountService.deleteLoginStateAsync(session.user.useridx);
     await this.authService.deleteRefreshTokenAsync(session.user.useridx);
 
-    return { message: 'success' };
+    const res: ResMessage = {
+      message: 'success',
+    };
+
+    return res;
   }
 
   /**
    * 계정삭제
    */
   @Delete('/delete')
-  async deleteAccount(@Session() session: SessionData): Promise<any> {
+  async deleteAccount(@Session() session: SessionData): Promise<ResMessage> {
     await this.accountService.deleteLoginStateAsync(session.user.useridx);
     await this.authService.deleteRefreshTokenAsync(session.user.useridx);
     await this.accountService.deleteAccountAsync(session.user.useridx);
 
-    return { message: 'success' };
+    const res: ResMessage = {
+      message: 'success',
+    };
+
+    return res;
   }
 }

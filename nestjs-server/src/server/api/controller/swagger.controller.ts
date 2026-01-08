@@ -1,37 +1,28 @@
 import { Controller, Get, UseGuards } from '@nestjs/common';
-
 import { ApiExcludeController } from '@nestjs/swagger';
-import { OperationObject } from '@nestjs/swagger/dist/interfaces/open-api-spec.interface';
+
 import ServerConfig from '@root/core/config/server.config';
 import { NoAuthGuard, SkipResponseInterceptor } from '@root/core/decorator/core.decorator';
 import { DevGuard } from '@root/core/guard/dev.guard';
-import { existsSync, readFileSync } from 'fs';
-import path from 'path';
+import { SwaggerAppCommonSkip, SwaggerDocumentService } from 'nestjs-swagger-document';
 
 @Controller('swagger')
+@SwaggerAppCommonSkip()
 @ApiExcludeController()
-@UseGuards(DevGuard)
 @SkipResponseInterceptor()
+@UseGuards(DevGuard)
 @NoAuthGuard()
 export class SwaggerController {
-  constructor() {}
+  constructor(private readonly swaggerDocumentService: SwaggerDocumentService) {}
 
   @Get('/')
   getMetadata(): any {
     const config = new SwaggerConfig();
-    const spec = { ...this.loadMetadata('api-metadata.json'), sockets: this.loadMetadata('socket-metadata.json') };
+    const spec = this.swaggerDocumentService.getDocument();
 
-    return { spec: spec, config: config.options.config, servers: ServerConfig.swagger.servers };
-  }
+    const res = { spec: spec, config: config.options.config, servers: ServerConfig.swagger.servers };
 
-  loadMetadata(file: string): Record<string, Record<string, OperationObject>> {
-    const filePath = path.join(ServerConfig.paths.root, 'swagger', file);
-    if (!existsSync(filePath)) {
-      return undefined;
-    }
-    const data = readFileSync(filePath, 'utf-8');
-
-    return JSON.parse(data);
+    return res;
   }
 }
 

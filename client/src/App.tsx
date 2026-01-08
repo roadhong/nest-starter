@@ -1,13 +1,12 @@
 import { Box, LinearProgress, linearProgressClasses } from '@mui/material';
 import { GoogleOAuthProvider } from '@react-oauth/google';
-import ServerConfig from '@root/common/config/server.config';
-import managementStore, { PlatformInfo } from '@root/views/pages/management/store/ManagementStore';
 import ServerApi from '@root/common/util/server.api';
 import { varAlpha } from 'minimal-shared/utils';
 import { observer } from 'mobx-react-lite';
 import { lazy, ReactElement, Suspense } from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import AppProviders from './components/context/AppProvider';
+import userStore, { PlatformInfo } from '@root/common/store/UserStore';
 
 const PageServerError = lazy(async () => import('@root/views/pages/management/material-kit/pages/page-server-error'));
 
@@ -33,6 +32,24 @@ const renderFallback = () => (
 
 const App = observer((): ReactElement => {
   const getRoutes = async () => {
+    const platformInfo = await ServerApi.App.appControllerGetPlatformInfo();
+    const info: PlatformInfo = {
+      google: {
+        client_id: platformInfo.data.platform.google.client_id ?? '',
+        client_email: platformInfo.data.platform.google.client_email ?? '',
+      },
+    };
+    userStore.setPlatformInfo(info);
+
+    ServerApi.setLogout(async () => {
+      try {
+        await ServerApi.Account.accountControllerLogout();
+        userStore.clearUser();
+      } catch (error) {
+        console.error('Logout failed:', error);
+      }
+    });
+
     if (import.meta.env.VITE_BUILD_TYPE === 'swagger') {
       const LazySwagger = lazy(async () => import('./views/pages/swagger/Swagger'));
 
@@ -44,19 +61,10 @@ const App = observer((): ReactElement => {
     } else if (import.meta.env.VITE_BUILD_TYPE === 'management') {
       const { routesSection } = await import('@root/views/pages/management/material-kit/routes/sections');
 
-      const platformInfo = await ServerApi.App.appControllerGetPlatformInfo();
-      const info: PlatformInfo = {
-        google: {
-          client_id: platformInfo.data.platform.google.client_id ?? '',
-          client_email: platformInfo.data.platform.google.client_email ?? '',
-        },
-      };
-      managementStore.setPlatformInfo(info);
-
       return (
-        <GoogleOAuthProvider clientId={managementStore.platformInfo?.google?.client_id || ''}>
+        <GoogleOAuthProvider clientId={userStore.platformInfo?.google?.client_id || ''}>
           <Routes>
-            {managementStore.platformInfo?.google?.client_id ? (
+            {userStore.platformInfo?.google?.client_id ? (
               routesSection.map((route, index) => (
                 <Route key={index} path={route.path} element={route.element} caseSensitive={route.caseSensitive}>
                   {route.children?.map((child, childIndex) => (
@@ -74,7 +82,7 @@ const App = observer((): ReactElement => {
   };
 
   return (
-    <BrowserRouter basename={`/client/${ServerConfig.build_type}`}>
+    <BrowserRouter basename={import.meta.env.BASE_URL}>
       <Suspense fallback={renderFallback()}>
         <AppProviders>{getRoutes()}</AppProviders>
       </Suspense>

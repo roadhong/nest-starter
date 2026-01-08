@@ -1,4 +1,3 @@
-import { ServeStaticModuleOptions } from '@nestjs/serve-static';
 import { SERVER_TYPE, ZONE_TYPE } from '@root/core/define/core.define';
 import * as fs from 'fs';
 import * as path from 'path';
@@ -11,8 +10,6 @@ class ServerConfig {
   static service: ServiceConfig = {
     name: '',
   };
-
-  static client: ServeStaticModuleOptions[] = [];
 
   static jwt: JwtConfig = {
     key: '',
@@ -50,14 +47,14 @@ class ServerConfig {
   static db: DBConfig = {
     mongo: {
       active: false,
-      hosts: [],
-      replica_set: '',
+      host: '',
+      port: 0,
       auth_source: '',
-      db_name: '',
-      user_name: '',
-      password: '',
+      db_name: 'global',
+      user_name: 'admin',
+      password: 'admin',
       min_pool_size: 0,
-      max_pool_size: 0,
+      max_pool_size: 10,
       use_tls: false,
     },
     redis: {
@@ -79,8 +76,13 @@ class ServerConfig {
   private static loadConfig(): void {
     this.zone = process.env.zone ?? ZONE_TYPE.NONE;
     this.server_type = process.env.server_type ?? SERVER_TYPE.NONE;
-    this.paths.root = path.join(__dirname, '..', '..', '..', 'src');
-    this.paths.env = path.join(this.paths.root, 'env');
+    this.paths.root = path.join(__dirname, '..', '..', '..');
+    const isDist = __dirname.includes('dist');
+    if (isDist) {
+      this.paths.env = path.join(__dirname, '..', '..', 'env');
+    } else {
+      this.paths.env = path.join(this.paths.root, 'dist', 'env');
+    }
     if (this.zone === ZONE_TYPE.NONE) return;
 
     const excludes = ['name', 'prototype', 'length', 'zone', 'paths', 'server_type'];
@@ -171,8 +173,8 @@ export interface DBConfig {
  */
 export interface MongoConfig {
   active: boolean;
-  hosts: string[];
-  replica_set: string;
+  host: string;
+  port: number;
   auth_source: string;
   db_name: string;
   user_name: string;

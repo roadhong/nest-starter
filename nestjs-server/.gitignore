@@ -391,3 +391,4 @@ Temporary Items
 dist
 .webpack
 .serverless/**/*.zip
+api-metadata.json

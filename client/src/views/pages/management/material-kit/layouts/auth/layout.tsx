@@ -131,5 +131,5 @@ const backgroundStyles = (): CSSObject => ({
   backgroundSize: 'cover',
   backgroundRepeat: 'no-repeat',
   backgroundPosition: 'center center',
-  backgroundImage: 'url(/client/management/assets/background/overlay.jpg)',
+  backgroundImage: 'url(/management/assets/background/overlay.jpg)',
 });

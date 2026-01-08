@@ -16,5 +16,5 @@
     },
     "keepClassNames": true
   },
-  "exclude": ["node_modules", "dist", "src/swagger"]
+  "exclude": ["node_modules", "dist"]
 }

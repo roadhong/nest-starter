@@ -19,7 +19,7 @@ export class DBAccount {
   @Prop()
   platform: string;
 
-  @Prop({ type: 'number', enum: Object.values(ROLE) })
+  @Prop({ type: 'number', enum: Object.values(ROLE).filter((v) => typeof v === 'number') })
   role: ROLE;
 
   @Prop()

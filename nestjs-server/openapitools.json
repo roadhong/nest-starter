@@ -6,7 +6,7 @@
     "generators": {
       "nestjs-api-axios": {
         "generatorName": "typescript-axios",
-        "inputSpec": "./src/swagger/api-metadata.json",
+        "inputSpec": "./api-metadata.json",
         "output": "../client/modules/nestjs-api-axios",
         "templateDir": "./openapi-template",
         "additionalProperties": {

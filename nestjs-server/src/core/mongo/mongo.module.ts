@@ -15,14 +15,12 @@ import ServerLogger from '../server-logger/server.logger';
             useFactory: async () => {
               const db = ServerConfig.db.mongo;
               const dbName = DBConnectKeys.getKey(db.db_name);
-              const uri = `mongodb://${db.hosts.join(',')}/?replicaSet=${db.replica_set}`;
+
+              const uri = `mongodb://${db.user_name}:${db.password}@${db.host}:${db.port}/${dbName}?authSource=${db.auth_source}`;
+              ServerLogger.log(`uri: ${uri}`, 'MongooseModule');
 
               return {
                 uri,
-                dbName,
-                user: db.user_name,
-                pass: db.password,
-                authSource: db.auth_source,
                 maxPoolSize: db.max_pool_size,
                 minPoolSize: db.min_pool_size,
                 tls: db.use_tls,
@@ -56,7 +54,7 @@ export class MongoModule implements OnModuleInit {
         providers: [
           ...models.map((model) => ({
             provide: getModelToken(model.name),
-            useValue: {}, // 더미 객체 또는 Proxy 등
+            useValue: {},
           })),
         ],
         exports: models.map((model) => getModelToken(model.name)),

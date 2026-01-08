@@ -6,6 +6,6 @@ export const _workspaces: WorkspacesPopoverProps['data'] = [
   {
     id: 'team-1',
     name: 'Team 1',
-    logo: '/client/management/assets/icons/workspaces/logo-1.webp',
+    logo: '/management/assets/icons/workspaces/logo-1.webp',
   },
 ];

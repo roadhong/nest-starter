@@ -19,10 +19,10 @@
     "noFallthroughCasesInSwitch": false,
     "esModuleInterop": true,
     "paths": {
-      "@root/*": ["./src/*"],
+      "@root/*": ["./src/*"]
     },
     "typeRoots": ["./node_modules/@types", "./src/types"]
   },
   "include": ["src", "eslint.config.js", "pnpm-workspace.yaml", "package.json", "tsconfig.json"],
-  "exclude": ["node_modules", "dist", "src/swagger/metadata.ts"]
+  "exclude": ["node_modules", "dist"]
 }

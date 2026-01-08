@@ -45,8 +45,8 @@ export class MongoService {
         for (const [key, schemaType] of Object.entries(model.schema.paths)) {
           detail.push({
             name: key,
-            type: schemaType.instance,
-            required: schemaType.isRequired,
+            type: schemaType['instance'],
+            required: schemaType['isRequired'],
           });
         }
 

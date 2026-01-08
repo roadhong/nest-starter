@@ -86,3 +86,10 @@ export class ResDBData {
    */
   total: number;
 }
+
+export class ResMessage {
+  /**
+   * 응답 메시지
+   */
+  message: string;
+}

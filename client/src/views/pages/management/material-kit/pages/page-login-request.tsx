@@ -1,7 +1,7 @@
 import { CONFIG } from '@root/views/pages/management/material-kit/config-global';
 
 import { Box, Typography } from '@mui/material';
-import { GoogleLoginButton } from '@root/views/pages/management/material-kit/components/google-login/google-login';
+import { GoogleLoginButton } from '@root/components/GoogleLoginButton';
 
 // ----------------------------------------------------------------------
 

@@ -24,13 +24,14 @@ export default defineConfig(({ command, mode, isSsrBuild, isPreview }) => {
   process.env.VITE_BUILD_TYPE = build_type;
   process.env.VITE_ZONE = zone;
   process.env.VITE_SERVER_NAME = config.service?.name ?? 'Nest';
-  process.env.VITE_SERVER_API_PORT = config.server_info.api.port ?? '0';
-  process.env.VITE_SERVER_BATCH_PORT = config.server_info.batch.port ?? '0';
-  process.env.VITE_SERVER_SOCKET_PORT = config.server_info.socket.port ?? '0';
-  process.env.VITE_SERVER_MQ_PORT = config.server_info.mq.port ?? '0';
+  process.env.VITE_SERVER_API_URL = config.server_info.api.url ?? 'http://localhost:20000';
+  process.env.VITE_SERVER_BATCH_URL = config.server_info.batch.url ?? 'http://localhost:30000';
+  process.env.VITE_SERVER_SOCKET_URL = config.server_info.socket.url ?? 'http://localhost:40000';
+  process.env.VITE_SERVER_MQ_URL = config.server_info.mq.url ?? 'http://localhost:50000';
+  process.env.BASE_URL = build_type === 'swagger' ? '/swagger/' : '/management/';
 
   return {
-    base: `/client/${build_type}`,
+    base: process.env.BASE_URL,
     plugins: [
       react(),
       {
@@ -73,7 +74,7 @@ export default defineConfig(({ command, mode, isSsrBuild, isPreview }) => {
     },
     server: {
       host: true,
-      port: 3000,
+      port: parseInt(process.env.port ?? '3000'),
     },
     css: {
       postcss: {

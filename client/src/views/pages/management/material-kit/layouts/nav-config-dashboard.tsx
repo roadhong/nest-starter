@@ -4,7 +4,7 @@ import { SvgColor } from '@root/views/pages/management/material-kit/components/s
 
 // ----------------------------------------------------------------------
 
-const icon = (name: string) => <SvgColor src={`/client/management/assets/icons/navbar/${name}.svg`} />;
+const icon = (name: string) => <SvgColor src={`/management/assets/icons/navbar/${name}.svg`} />;
 
 export type NavItem = {
   title: string;

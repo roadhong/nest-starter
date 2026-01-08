@@ -1,5 +1,5 @@
 import { CredentialResponse, GoogleLogin } from '@react-oauth/google';
-import managementStore from '@root/views/pages/management/store/ManagementStore';
+import userStore from '@root/common/store/UserStore';
 import ServerApi from '@root/common/util/server.api';
 import { ReqGoogleLogin } from 'nestjs-api-axios';
 import { ReactElement } from 'react';
@@ -23,7 +23,7 @@ export function GoogleLoginButton(props: GoogleLoginProps): ReactElement {
         if (response.data.data) {
           const profile = response.data.data.profile as any;
           ServerApi.headers['Authorization'] = `Bearer ${response.data.data.jwt.access_token}`;
-          managementStore.setUser({
+          userStore.setUser({
             email: profile?.email ?? '',
             name: profile?.name ?? '',
             role: Number(response.data.data.role),

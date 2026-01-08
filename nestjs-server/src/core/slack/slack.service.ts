@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { ChatPostMessageArguments, WebClient } from '@slack/web-api';
+import { ChatPostMessageArguments, ChatUpdateArguments, WebClient } from '@slack/web-api';
 
 @Injectable()
 export class SlackService {
@@ -17,7 +17,7 @@ export class SlackService {
     await this.client.chat.delete({ channel, ts });
   }
 
-  async updateMessage(ts: string, config: ChatPostMessageArguments): Promise<void> {
-    await this.client.chat.update({ ts, ...config });
+  async updateMessage(config: ChatUpdateArguments): Promise<void> {
+    await this.client.chat.update(config);
   }
 }

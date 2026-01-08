@@ -42,7 +42,9 @@ export class AdminController {
       created_at: user.created_at.toISOString(),
     }));
 
-    return { users };
+    const res: ResGetUsers = { users };
+
+    return res;
   }
 
   /**
@@ -58,12 +60,14 @@ export class AdminController {
     dbUsers.role = req.role;
     await this.accountService.upsertAccountAsync(dbUsers);
 
-    return {
+    const res: ResUser = {
       useridx: dbUsers.useridx,
       nickname: dbUsers.nickname,
       role: dbUsers.role,
       created_at: dbUsers.created_at.toISOString(),
     };
+
+    return res;
   }
 
   /**
@@ -73,7 +77,9 @@ export class AdminController {
   async getDBList(@Session() session: SessionData): Promise<ResDBList> {
     const list = await this.mongoService.getCollections();
 
-    return { result: list };
+    const res: ResDBList = { result: list };
+
+    return res;
   }
 
   /**
@@ -100,11 +106,11 @@ export class AdminController {
     }
 
     const data = await this.mongoService.getCollectionPage(req.name, req.page, parsedFilter, parsedSort);
-    const result: ResDBData = {
+    const res: ResDBData = {
       data: data.data,
       total: data.total,
     };
 
-    return result;
+    return res;
   }
 }

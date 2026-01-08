@@ -2,27 +2,21 @@
   "service": {
     "name": "nest"
   },
-  "client": [
-    {
-      "rootPath": "../client/swagger",
-      "serveRoot": "/client/swagger"
-    },
-    {
-      "rootPath": "../client/management",
-      "serveRoot": "/client/management"
-    }
-  ],
   "server_info": {
     "api": {
+      "url": "http://localhost:20000",
       "port": 20000
     },
     "batch": {
+      "url": "http://localhost:30000",
       "port": 30000
     },
     "socket": {
+      "url": "http://localhost:40000",
       "port": 40000
     },
     "mq": {
+      "url": "http://localhost:50000",
       "port": 50000
     }
   },
@@ -75,8 +69,8 @@
   "db": {
     "mongo": {
       "active": true,
-      "hosts": ["localhost:27017"],
-      "replica_set": "rs0",
+      "host": "localhost",
+      "port": 27017,
       "auth_source": "admin",
       "db_name": "global",
       "user_name": "test_user",

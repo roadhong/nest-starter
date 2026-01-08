@@ -5,6 +5,7 @@ import { ROLE } from '@root/core/define/core.define';
 import CoreError from '@root/core/error/core.error';
 import { SlackService } from '@root/core/slack/slack.service';
 import { ReqUserUpdateRole } from '@root/server/api/dto/api.request.dto';
+import { ResMessage } from '@root/server/api/dto/api.response.dto';
 import { ChatPostMessageArguments } from '@slack/web-api';
 
 /**
@@ -18,7 +19,7 @@ export class UserController {
    * 권한 업데이트 요청
    */
   @Put('/update/role')
-  async requestRoleUpdate(@Session() session: SessionData, @Body() req: ReqUserUpdateRole): Promise<any> {
+  async requestRoleUpdate(@Session() session: SessionData, @Body() req: ReqUserUpdateRole): Promise<ResMessage> {
     if (req.role == ROLE.ADMIN) {
       throw CoreError.BAD_REQUEST;
     }
@@ -67,6 +68,10 @@ export class UserController {
       throw error;
     }
 
-    return { result: 'success' };
+    const res: ResMessage = {
+      message: 'success',
+    };
+
+    return res;
   }
 }
