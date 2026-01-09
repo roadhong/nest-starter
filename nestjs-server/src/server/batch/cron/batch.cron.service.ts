@@ -1,8 +1,6 @@
 import { Injectable, OnModuleInit } from '@nestjs/common';
 import { DiscoveryService } from '@nestjs/core';
 import { CronExpression, SchedulerRegistry } from '@nestjs/schedule';
-import ServerConfig from '@root/core/config/server.config';
-import { SERVER_TYPE } from '@root/core/define/core.define';
 import ServerLogger from '@root/core/server-logger/server.logger';
 import ObjectUtil from '@root/core/utils/obj.utils';
 import { BatchCronRepository } from '@root/server/batch/cron/batch.cron.repository';
@@ -27,10 +25,6 @@ export class BatchCronService implements OnModuleInit {
    * - 각 key별로 메서드를 메모리 맵에 저장하고, 등록된 job 정보가 있으면 반영한다.
    */
   async onModuleInit(): Promise<void> {
-    if (ServerConfig.server_type !== SERVER_TYPE.BATCH) {
-      return;
-    }
-
     const providers = this.discoveryService.getProviders();
     for (const wrapper of providers) {
       const instance = wrapper.instance;

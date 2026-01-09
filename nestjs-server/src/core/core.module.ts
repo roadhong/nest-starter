@@ -42,8 +42,17 @@ export class CoreModule implements OnModuleInit {
     ServerLogger.log(`CoreModule.onModuleInit`);
   }
 
-  static registerDynamic(t: Type<any>, target_path: string, end_with_file_name: string, type: 'controllers' | 'providers' | 'imports'): DynamicModule {
-    const files = readdirSync(target_path).filter((file) => file.endsWith(`${end_with_file_name}.js`) || file.endsWith(`${end_with_file_name}.ts`));
+  static registerDynamic(t: Type<any>, target_path: string, end_with_file_name: string, type: 'controllers' | 'providers' | 'imports', exclude?: string[]): DynamicModule {
+    const files = readdirSync(target_path).filter((file) => {
+      const matchesEnd = file.endsWith(`${end_with_file_name}.js`) || file.endsWith(`${end_with_file_name}.ts`);
+      if (!matchesEnd) return false;
+
+      if (exclude) {
+        return !exclude.some((excludePattern) => file.includes(excludePattern));
+      }
+
+      return true;
+    });
     const classes: any[] = files.map((file) => {
       // eslint-disable-next-line @typescript-eslint/no-require-imports
       const mod = require(path.join(target_path, file));

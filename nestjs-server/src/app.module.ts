@@ -4,7 +4,7 @@ import { CoreModule } from '@root/core/core.module';
 import { ServerModule } from '@root/server/server.module';
 
 @Module({
-  imports: [CoreModule, ServerModule],
+  imports: [CoreModule, ServerModule.forRootAsync()],
   controllers: [AppController],
   providers: [],
 })

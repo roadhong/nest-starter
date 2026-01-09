@@ -18,7 +18,7 @@ const compat = new FlatCompat({
 });
 
 export default defineConfig([
-  globalIgnores(['**/dist', '**/node_modules', '**/docker-local-db', '**/public', '**/metadata.ts']),
+  globalIgnores(['**/dist', '**/node_modules', '**/docker-local-db']),
   {
     extends: compat.extends('eslint:recommended', 'plugin:@typescript-eslint/recommended', 'plugin:prettier/recommended', 'plugin:promise/recommended'),
     plugins: {

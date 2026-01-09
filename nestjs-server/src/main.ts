@@ -66,7 +66,7 @@ async function bootstrap(): Promise<void> {
 
     if (server_type === SERVER_TYPE.API && ServerConfig.dev) {
       const { SwaggerDocumentService } = await import('nestjs-swagger-document');
-      const { SwaggerAppModule } = await import('@root/swagger.app.module');
+      const { SwaggerAppModule } = await import('@root/server/swagger/swagger.app.module');
       const { spawn } = await import('child_process');
       const swaggerApp = await NestFactory.create(SwaggerAppModule, {});
       const swaggerService = app.get(SwaggerDocumentService);
