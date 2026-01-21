@@ -17,6 +17,7 @@ import timezone from 'dayjs/plugin/timezone';
 import utc from 'dayjs/plugin/utc';
 import { json } from 'express';
 import helmet from 'helmet';
+import path from 'path';
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -45,6 +46,26 @@ async function bootstrap(): Promise<void> {
       await setMQerver(app);
     }
 
+    if (server_type === SERVER_TYPE.API && ServerConfig.dev) {
+      const { SwaggerDocumentService } = await import('nestjs-swagger-document');
+      const { SwaggerAppModule } = await import('@root/server/swagger/swagger.app.module');
+      const swaggerApp = await NestFactory.create(SwaggerAppModule, {});
+      const swaggerService = app.get(SwaggerDocumentService);
+      let isSwaggerReady = false;
+      swaggerService.initialize(swaggerApp, () => {
+        isSwaggerReady = true;
+      });
+      app.use('/api-metadata.json', (_req, res) => {
+        if (!isSwaggerReady) {
+          res.status(503).json({ message: 'Swagger metadata is not ready yet' });
+
+          return;
+        }
+        res.setHeader('Cache-Control', 'public, max-age=3600');
+        res.sendFile(path.join(ServerConfig.paths.root, 'api-metadata.json'));
+      });
+    }
+
     await app.listen(port);
 
     if (ServerConfig.zone == ZONE_TYPE.LOCAL) {
@@ -61,38 +82,6 @@ async function bootstrap(): Promise<void> {
 
         console.log('\x1b[36m%s\x1b[0m', data);
         console.log(`${server_type.toUpperCase()} Server is running on:\x1b[0m \x1b[32m${appUrl}\x1b[0m\n`);
-      });
-    }
-
-    if (server_type === SERVER_TYPE.API && ServerConfig.dev) {
-      const { SwaggerDocumentService } = await import('nestjs-swagger-document');
-      const { SwaggerAppModule } = await import('@root/server/swagger/swagger.app.module');
-      const { spawn } = await import('child_process');
-      const swaggerApp = await NestFactory.create(SwaggerAppModule, {});
-      const swaggerService = app.get(SwaggerDocumentService);
-      swaggerService.initialize(swaggerApp, () => {
-        setImmediate(() => {
-          const rootPath = ServerConfig.paths.root;
-          ServerLogger.log('[OpenAPI] Starting openapi:generate in worker...');
-
-          const pnpmProcess = spawn('pnpm', ['run', 'openapi:generate'], {
-            cwd: rootPath,
-            shell: true,
-            stdio: 'inherit',
-          });
-
-          pnpmProcess.on('error', (error) => {
-            ServerLogger.error(`[OpenAPI] Failed to start openapi:generate: ${error.message}`, error.stack);
-          });
-
-          pnpmProcess.on('exit', (code) => {
-            if (code === 0) {
-              ServerLogger.log('[OpenAPI] openapi:generate completed successfully');
-            } else {
-              ServerLogger.warn(`[OpenAPI] openapi:generate exited with code ${code}`);
-            }
-          });
-        });
       });
     }
   } catch (error) {

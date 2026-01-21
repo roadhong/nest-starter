@@ -8,28 +8,12 @@
     },
     {
       "type": "node",
-      "name": "┃Swagger Run",
-      "request": "launch",
-      "runtimeExecutable": "pnpm",
-      "runtimeArgs": ["run", "start"],
-      "skipFiles": ["<node_internals>/**"],
-      "env": {
-        "build_type": "swagger",
-        "zone": "local",
-        "port": "4000"
-      },
-      "cwd": "${workspaceFolder}",
-      "console": "integratedTerminal"
-    },
-    {
-      "type": "node",
       "name": "┃Management Run",
       "request": "launch",
       "runtimeExecutable": "pnpm",
       "runtimeArgs": ["run", "start"],
       "skipFiles": ["<node_internals>/**"],
       "env": {
-        "build_type": "management",
         "zone": "local",
         "port": "3000"
       },
@@ -39,15 +23,8 @@
     {
       "type": "chrome",
       "request": "launch",
-      "name": "┃Swagger For Debug",
-      "url": "http://localhost:4000/swagger/",
-      "webRoot": "${workspaceFolder}"
-    },
-    {
-      "type": "chrome",
-      "request": "launch",
       "name": "┃Management For Debug",
-      "url": "http://localhost:3000/management/",
+      "url": "http://localhost:3000/",
       "webRoot": "${workspaceFolder}"
     },
     {

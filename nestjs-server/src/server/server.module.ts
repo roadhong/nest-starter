@@ -27,7 +27,6 @@ export class ServerModule implements OnModuleInit {
       });
       if (ServerConfig.dev) {
         const { SwaggerDocumentModule } = await import('nestjs-swagger-document');
-        const { SwaggerController } = await import('@root/server/swagger/swagger.controller');
         importModules.push(
           SwaggerDocumentModule.forRoot({
             pluginOptions: {
@@ -37,10 +36,19 @@ export class ServerModule implements OnModuleInit {
               name: CommonResponse.name,
               properties: 'data',
             },
+            builderOptions: {
+              bearerAuth: {
+                options: {
+                  type: 'http',
+                  scheme: 'bearer',
+                  bearerFormat: 'JWT',
+                },
+                name: 'Authorization',
+              },
+            },
             debug: true,
           }),
         );
-        controllerModules.push(SwaggerController);
       }
     } else if (server_type === SERVER_TYPE.BATCH) {
       const { BatchModule } = await import('@root/server/batch/batch.module');

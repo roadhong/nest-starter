@@ -50,39 +50,29 @@ const App = observer((): ReactElement => {
       }
     });
 
-    if (import.meta.env.VITE_BUILD_TYPE === 'swagger') {
-      const LazySwagger = lazy(async () => import('./views/pages/swagger/Swagger'));
+    const { routesSection } = await import('@root/views/pages/management/material-kit/routes/sections');
 
-      return (
+    return (
+      <GoogleOAuthProvider clientId={userStore.platformInfo?.google?.client_id || ''}>
         <Routes>
-          <Route path="/" element={<LazySwagger />} />
+          {userStore.platformInfo?.google?.client_id ? (
+            routesSection.map((route, index) => (
+              <Route key={index} path={route.path} element={route.element} caseSensitive={route.caseSensitive}>
+                {route.children?.map((child, childIndex) => (
+                  <Route key={childIndex} path={child.path} element={child.element} caseSensitive={child.caseSensitive} />
+                ))}
+              </Route>
+            ))
+          ) : (
+            <Route path="*" element={<PageServerError />} />
+          )}
         </Routes>
-      );
-    } else if (import.meta.env.VITE_BUILD_TYPE === 'management') {
-      const { routesSection } = await import('@root/views/pages/management/material-kit/routes/sections');
-
-      return (
-        <GoogleOAuthProvider clientId={userStore.platformInfo?.google?.client_id || ''}>
-          <Routes>
-            {userStore.platformInfo?.google?.client_id ? (
-              routesSection.map((route, index) => (
-                <Route key={index} path={route.path} element={route.element} caseSensitive={route.caseSensitive}>
-                  {route.children?.map((child, childIndex) => (
-                    <Route key={childIndex} path={child.path} element={child.element} caseSensitive={child.caseSensitive} />
-                  ))}
-                </Route>
-              ))
-            ) : (
-              <Route path="*" element={<PageServerError />} />
-            )}
-          </Routes>
-        </GoogleOAuthProvider>
-      );
-    }
+      </GoogleOAuthProvider>
+    );
   };
 
   return (
-    <BrowserRouter basename={import.meta.env.BASE_URL}>
+    <BrowserRouter>
       <Suspense fallback={renderFallback()}>
         <AppProviders>{getRoutes()}</AppProviders>
       </Suspense>

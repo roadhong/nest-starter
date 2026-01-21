@@ -12,8 +12,6 @@
     "start": "vite",
     "build": "pnpm run clear && vite build",
     "build:docker": "pnpm run clear && vite build --mode docker",
-    "build:swagger": "rimraf swagger && cross-env zone=local build_type=swagger vite build",
-    "build:management": "rimraf management && cross-env zone=local build_type=management vite build",
     "preview": "vite preview",
     "lint": "eslint './src/**/*.{ts,tsx}' --fix",
     "lint:check": "eslint './src/**/*.{ts,tsx}"

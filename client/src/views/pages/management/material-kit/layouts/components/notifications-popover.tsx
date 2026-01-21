@@ -209,25 +209,25 @@ function renderContent(notification: NotificationItemProps) {
 
   if (notification.type === 'order-placed') {
     return {
-      avatarUrl: <img alt={notification.title} src="/management/assets/icons/notification/ic-notification-package.svg" />,
+      avatarUrl: <img alt={notification.title} src="/assets/icons/notification/ic-notification-package.svg" />,
       title,
     };
   }
   if (notification.type === 'order-shipped') {
     return {
-      avatarUrl: <img alt={notification.title} src="/management/assets/icons/notification/ic-notification-shipping.svg" />,
+      avatarUrl: <img alt={notification.title} src="/assets/icons/notification/ic-notification-shipping.svg" />,
       title,
     };
   }
   if (notification.type === 'mail') {
     return {
-      avatarUrl: <img alt={notification.title} src="/management/assets/icons/notification/ic-notification-mail.svg" />,
+      avatarUrl: <img alt={notification.title} src="/assets/icons/notification/ic-notification-mail.svg" />,
       title,
     };
   }
   if (notification.type === 'chat-message') {
     return {
-      avatarUrl: <img alt={notification.title} src="/management/assets/icons/notification/ic-notification-chat.svg" />,
+      avatarUrl: <img alt={notification.title} src="/assets/icons/notification/ic-notification-chat.svg" />,
       title,
     };
   }
